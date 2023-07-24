@@ -13,7 +13,7 @@ Kittygram — социальная сеть для обмена фотограф
  - Django 4.0
  - Django rest_framework
  - Docker
- - Sqlite3
+ - Postgresql
  - React
   
 ### Как запустить проект на localhost (разработка):
@@ -49,7 +49,7 @@ pip install -r requirements.txt
 Выполнить миграции:
 
 ```
-python3 manage.py migrate
+python manage.py migrate
 ```
 
 Запустить проект:
