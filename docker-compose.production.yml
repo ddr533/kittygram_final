@@ -14,6 +14,8 @@ services:
   backend:
     image: ddr533/kittygram_backend
     env_file: .env
+    depends_on:
+      - db
     volumes:
       - static:/backend_static/
       - media:/app/media
@@ -24,6 +26,8 @@ services:
       - static:/frontend_static/
   gateway:
     image: ddr533/kittygram_gateway
+    depends_on:
+      - backend
     ports:
       - 9000:80
     volumes:
