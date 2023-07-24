@@ -25,7 +25,7 @@ git clone git@github.com:ddr533/kittygram_final.git
 ```
 
 ```
-cd infra_sprint1
+cd kittygram_final
 ```
 
 Cоздать и активировать виртуальное окружение:
@@ -81,7 +81,7 @@ sudo nano /etc/nginx/sites-enabled/default
 
 ```
 
-* Скопируйте на сервер в директорию kittygram/ файл docker-compose.production.yml
+* Скопируйте на сервер в директорию kittygram_final/ файл docker-compose.production.yml
 * Запустите docker compose
 ```
 sudo docker compose -f docker-compose.production.yml up -d
