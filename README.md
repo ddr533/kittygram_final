@@ -1,26 +1,171 @@
-#  Как работать с репозиторием финального задания
+[![Main Kittygramm workflow](https://github.com/ddr533/kittygram_final/actions/workflows/main.yaml/badge.svg)](https://github.com/ddr533/kittygram_final/actions/workflows/main.yaml)
 
-## Что нужно сделать
+# KittyGram  
+##### Описание проекта 
+Kittygram — социальная сеть для обмена фотографиями любимых питомцев.
+##### Основные возможности:
+* Публикация фотографий и достижений питомцев.
+* Получение данных по API.
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+##### Технологии 
+  
+ - Python 3.9   
+ - Django 4.0
+ - Django rest_framework
+ - Docker
+ - Sqlite3
+ - React
+  
+### Как запустить проект на localhost (разработка):
 
-## Как проверить работу с помощью автотестов
+Клонировать репозиторий и перейти в него в командной строке:
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+```
+git clone git@github.com:ddr533/kittygram_final.git
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+```
+cd infra_sprint1
+```
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+Cоздать и активировать виртуальное окружение:
 
-## Чек-лист для проверки перед отправкой задания
+```
+python -m venv env
+```
+```
+source env/scripts/activate
+```
+```
+python -m pip install --upgrade pip
+```
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+Установить зависимости из файла requirements.txt:
+
+```
+pip install -r requirements.txt
+```
+
+Выполнить миграции:
+
+```
+python3 manage.py migrate
+```
+
+Запустить проект:
+
+```
+python manage.py runserver
+```
+
+### Как запустить проект в контейнере Docker Linux:
+* Установить Докер
+```
+sudo apt update
+sudo apt install curl
+curl -fSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo apt-get install docker-compose-plugin
+sudo systemctl status docker
+```
+* Установить и настроить nginx на порт 9000:
+```
+sudo apt install nginx -y
+sudo systemctl start nginx
+sudo nano /etc/nginx/sites-enabled/default
+........
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+    }
+........
+
+```
+
+* Скопируйте на сервер в директорию kittygram/ файл docker-compose.production.yml
+* Запустите docker compose
+```
+sudo docker compose -f docker-compose.production.yml up -d
+```
+* Выполните миграции, соберите статические файлы бэкенда и скопируйте их в /backend_static/static/:
+```
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+```
+
+
+### Примеры запросов API:
+* Создание нового пользователя:
+  
+  - api/users/
+```
+    {
+        "email": "string",
+        "username": "string",
+        "password": "string"
+    }
+
+``` 
+* Получение токена для аутентификации (Token): 
+
+  - api/token/
+```
+    {
+        "username": "string",
+        "password": "string"
+    }
+
+``` 
+* Получить список всех котов (GET): 
+
+  - api/сats/
+
+```
+{
+    "count": 10,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 24,
+            "name": "Мурка",
+            "color": "black",
+            "birth_year": 1999,
+            "achievements": [
+                {
+                    "id": 3,
+                    "achievement_name": "Спит весь день"
+                },
+                {
+                    "id": 1,
+                    "achievement_name": "Считай голубей"
+                }
+            ],
+            "owner": "Иван",
+            "age": 24,
+            "image": "http://127.0.0.1:8080/media/cats/images/temp.png",
+            "image_url": "/media/cats/images/temp.png"
+        },
+  ....
+
+```
+* Разместить фото кота (POST): 
+
+  - api/cats/
+  - В поле image передавать строку с картинкой в формате base64 
+
+```
+        {
+            "name": "Василий",
+            "color": "#DCDCDC",
+            "birth_year": 2020,
+            "image": base64
+            "achievements": [
+                {"achievement_name": "разбил вазу"}
+            ]
+        }   
+
+```
+
+### Автор:
+Андрей Дрогаль & Yandex_Practicum
