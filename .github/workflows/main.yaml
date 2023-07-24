@@ -170,4 +170,10 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: Деплой kittygram успешно выполнен!
+        message: |
+        Деплой kittygram успешно выполнен!
+        Автор: ${{ github.actor }}
+        Коммит: ${{ github.event.commits[0].message }}            
+        Репозиторий: ${{ github.repository }}
+        Изменения: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+        
