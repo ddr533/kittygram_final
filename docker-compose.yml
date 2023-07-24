@@ -25,7 +25,7 @@ services:
   gateway:
     build: ./nginx/
     ports:
-      - 9000:80
+      - 8000:80
     volumes:
       - static:/static/
       - media:/var/www/media
