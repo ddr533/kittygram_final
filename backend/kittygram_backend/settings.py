@@ -4,11 +4,14 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-cg6*%6d51ef8f#4!r3*$vmxm4)abgjw8mo!4y-q*uq1!4$-89$'
+SECRET_KEY = os.getenv('SECRET_KEY'),
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+if os.getenv('DJANGO_ENV') == 'production':
+    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS_PROD', '').split(',')
+else:
+    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS_DEV', '').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,7 +62,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'kittygram'),
         'USER': os.getenv('POSTGRES_USER', 'kittygram_user'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'db'),
         'HOST': os.getenv('DB_HOST', ''),
         'PORT': os.getenv('DB_PORT', 5432)
     }
